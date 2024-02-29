@@ -1,0 +1,119 @@
+
+getgenv().SecureMode = true
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Sword Bot Script",
+   LoadingTitle = "Example Hub",
+   LoadingSubtitle = "by TacoMan",
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "swordScriptExample"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("Main Tab", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Main")
+
+local Toggle = MainTab:CreateToggle({
+   Name = "Sword Bot",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+		_G toggleAuto = (Value)
+   end,
+})
+
+-- Get the local player
+local localPlayer = game:GetService("Players").LocalPlayer
+
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    --for loop going through all players in server
+    for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+        --If the player is not the local player
+        if v.Name ~= localPlayer.Name then
+            if --if the player has a head, humanoid and health is greater than 0
+                v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 and
+                    v.Character:FindFirstChild("HumanoidRootPart") and
+                    v.Character:FindFirstChild("Head")
+             then --if the player has a forcefield
+                if v.Character:FindFirstChildOfClass("ForceField") then
+                else --else (if the player doesnt have a forcefield)
+                    --Create a ray from the players humanoid to very low center of world
+                    local ray =
+                        Ray.new(v.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(0, -100000, 0))
+                    local Hit = game:GetService("Workspace"):FindPartOnRay(ray, v.Character)
+                    --Set hit to the basepart of the player character on the ray
+                    if Hit then --if hit is not null, and player is on ray
+                        local magnitude =
+                            (v.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).magnitude
+                        --get distance between localplayer and player
+                        --if the distance is less than the shortest distance
+                        if magnitude < shortestDistance then
+                            closestPlayer = v --set closest player to currentPlayer
+                            shortestDistance = magnitude --set shortest distance to new distance
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+local stateType = Enum.HumanoidStateType
+
+local character = game.Players.LocalPlayer.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+humanoid:SetStateEnabled(stateType.FallingDown, false)
+humanoid:SetStateEnabled(stateType.Ragdoll, false)
+
+while true do
+    wait()
+    spawn(
+        function()
+            local test = getClosestPlayer()
+            if --if local player and closestPlayer are not null and toggle is on
+                game:GetService("Players").LocalPlayer.Character.PrimaryPart and getClosestPlayer() ~= nil and
+                    toggleAuto == true
+             then
+                local TargetPart = getClosestPlayer().Character.HumanoidRootPart
+                local Part = game.Players.LocalPlayer.Character.HumanoidRootPart
+                local RotateX, RotateY, RotateZ = 0, 0, 0
+                
+                --CFrame.new(pos: Vector3, lookat: Vector3)
+                --This creates a new CFrame for position at localplayer, and look at target
+                Part.CFrame =
+                    CFrame.new(Part.Position, TargetPart.Position) *
+                    CFrame.Angles(math.rad(0), math.rad(25), math.rad(0))
+                --Multiplies by CFrame.Angles to add sword offset
+
+                game:GetService("Players").LocalPlayer.Character.Humanoid:MoveTo(
+                    getClosestPlayer().Character.HumanoidRootPart.CFrame * Vector3.new(-3, 0, 0)
+                )
+                if getClosestPlayer().Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                end
+            end
+        end
+    )
+end
