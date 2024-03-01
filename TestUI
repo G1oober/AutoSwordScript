@@ -9,7 +9,6 @@ local window = PabloLib:Create(
 local tab1 = window:CreateTab("G1oober's Sword Script")
 
 ---buttons---
----buttons---
 tab1:CreateButton("TestButton", function()
 toggleSword = not toggleSword
 end)
