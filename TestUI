@@ -11,9 +11,11 @@ local tab1 = window:CreateTab("Stay Gucci!!!")
 
 
 ---buttons---
-tab1:CreateToggle("Toggle", function(state)
-if state then
-print("Enabled!")
-else
-print("Disabled!")
+tab1:CreateTextbox("Change Your Jump Power", function(a)
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = a
+print(a)
 end)
+
+---WARNING---
+
+tab1:CreateWarning("Warning")
