@@ -63,6 +63,14 @@ MainTab:AddSlider({
 -- Get the local player
 local localPlayer = game:GetService("Players").LocalPlayer
 
+localPlayer.PlayerAdded:Connect(function(player)
+	local humanoid = player.Character:FindFirstChild("Humanoid")
+	local tool = player.Character:FindFirstChildOfClass("Tool")
+	if humanoid and tool then
+		humanoid:EquipTool(tool)
+	end
+end)
+
 game:GetService("RunService").RenderStepped:Connect(function()
     local p = game.Players:GetPlayers()
     for i = 2, #p do local v = p[i].Character
@@ -93,12 +101,10 @@ local function getClosestPlayer()
              then
                 if v.Character:FindFirstChildOfClass("ForceField") then
                 else
-                    local ray =
-                        Ray.new(v.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(0, -100000, 0))
+                    local ray = Ray.new(v.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(0, -100000, 0))
                     local Hit = game:GetService("Workspace"):FindPartOnRay(ray, v.Character)
                     if Hit then
-                        local magnitude =
-                            (v.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).magnitude
+                        local magnitude = (v.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).magnitude
                         if magnitude < shortestDistance then
                             closestPlayer = v --set closest player to currentPlayer
                             shortestDistance = magnitude --set shortest distance to new distance
