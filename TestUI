@@ -1,4 +1,4 @@
-range = 0
+range = 20
 toggleSword = false
 
 local PabloLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
