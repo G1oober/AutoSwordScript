@@ -17,8 +17,3 @@ print("Enabled!")
 else
 print("Disabled!")
 end)
-
-
----WARNING---
-
-tab1:CreateWarning("Warning")
