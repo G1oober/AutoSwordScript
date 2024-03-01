@@ -6,9 +6,7 @@ local window = PabloLib:Create(
 )
 
 ---Tabs---
-
 local tab1 = window:CreateTab("Stay Gucci!!!")
-
 
 ---buttons---
 tab1:CreateTextbox("Change Your Jump Power", function(a)
@@ -17,5 +15,4 @@ print(a)
 end)
 
 ---WARNING---
-
 tab1:CreateWarning("Warning")
