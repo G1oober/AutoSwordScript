@@ -1,5 +1,3 @@
-_G toggleAuto = false
-
 local UILib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
 local window = UILib:Create(
 "Sword Script", -- BeStHaXYT UI
