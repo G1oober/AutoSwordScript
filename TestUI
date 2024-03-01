@@ -28,49 +28,26 @@ tab1:CreateWarning("Warning")
 ---------        SCRIPT        ----------------
 -----------------------------------------------
 
---RunService.RenderedStepped runs the function every frame, basically more efficient while loop
-game:GetService("RunService").RenderStepped:Connect(
-    function()
-        if autoSword == true then
-            spawn( --spawn starts a coroutine to run other things while this is running
-                function()
-                    --find the first tool (equippable) in the local players backpack
-                    local tool =
-                        game.Players.LocalPlayer.Character and
-                        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                    --if tool is not null and it has a handle meaning it needs to be equipped to use
-                    if tool and tool:FindFirstChild("Handle") then
-                        --simulates a click with the tool
-                        tool:Activate()
-                        
-                        -- Get a list of the current players
-                        local p = game.Players:GetPlayers()
-                        
-                        --Loop through the list of players 2, 3, 4, ...
-                        for i = 2, #p do
-                            local v = p[i].Character
-                            if  -- if the player has a humanoid and health is above 0 and distance between you and player is less than range
-                                v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and
-                                    v:FindFirstChild("HumanoidRootPart") and
-                                    game.Players.LocalPlayer:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range
-                             then
-                                for i, v in next, v:GetChildren() do
-                                    if v:IsA("BasePart") then
-                                        --firtouchinterest is a function made by Synapse X
-                                        --Used to create fake touch events between two objects
-                                        --makes sword touch the player 0 - off 1 - on
-                                        firetouchinterest(tool.Handle, v, 0)
-                                        firetouchinterest(tool.Handle, v, 1)
-                                    end
-                                end
-                            end
-                        end
+--// Variable \--
+local player = game:GetService("Players").LocalPlayer
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    local p = game.Players:GetPlayers()
+    for i = 2, #p do local v = p[i].Character
+        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
+            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Handle") then
+                tool:Activate()
+                for i,v in next, v:GetChildren() do
+                    if v:IsA("BasePart") then
+                        firetouchinterest(tool.Handle,v,0)
+                        firetouchinterest(tool.Handle,v,1)
                     end
                 end
-            )
+            end
         end
     end
-)
+end)
 
 
 -- Get the local player
