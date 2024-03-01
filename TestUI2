@@ -63,7 +63,7 @@ MainTab:AddSlider({
 -- Get the local player
 local localPlayer = game:GetService("Players").LocalPlayer
 
-localPlayer.PlayerAdded:Connect(function(player)
+localPlayer.CharacterAdded:Connect(function(player)
 	local humanoid = player.Character:FindFirstChild("Humanoid")
 	local tool = player.Character:FindFirstChildOfClass("Tool")
 	if humanoid and tool then
