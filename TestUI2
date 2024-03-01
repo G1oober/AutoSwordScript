@@ -3,6 +3,11 @@ local toggleAuto = false
 local toggleJump = false
 local toggleReach = false
 
+--To Do:
+-- Seperate Auto Walk and Auto Angle
+-- Fix slider for reach
+-- Figure out ehy autoequip is not working
+
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
 local Window = OrionLib:MakeWindow({Name = "G1oober's UI", HidePremium = true, SaveConfig = false, IntroText = "Welcome!"})
