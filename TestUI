@@ -1,72 +1,105 @@
-local PabloLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
-local window = PabloLib:Create(
-"Gucci UI", -- BeStHaXYT UI
+_G toggleAuto = false
+
+local UILib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
+local window = UILib:Create(
+"Sword Script", -- BeStHaXYT UI
 "Enabled", -- If you want draggable set here to "Enabled" if you dont want set to "Disabled".
 "p" -- You can put any keybind here to open close.
 )
 
 ---Tabs---
 
-local tab1 = window:CreateTab("Stay Gucci!!!")
+local tab1 = window:CreateTab("Sword Bot Script")
 
 
 ---buttons---
-
-tab1:CreateButton("Fly", function()
-loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\40\39\104\116\116\112\115\58\47\47\103\105\115\116\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\109\101\111\122\111\110\101\89\84\47\98\102\48\51\55\100\102\102\57\102\48\97\55\48\48\49\55\51\48\52\100\100\100\54\55\102\100\99\100\51\55\48\47\114\97\119\47\101\49\52\101\55\52\102\52\50\53\98\48\54\48\100\102\53\50\51\51\52\51\99\102\51\48\98\55\56\55\48\55\52\101\98\51\99\53\100\50\47\97\114\99\101\117\115\37\50\53\50\48\120\37\50\53\50\48\102\108\121\37\50\53\50\48\50\37\50\53\50\48\111\98\102\108\117\99\97\116\111\114\39\41\44\116\114\117\101\41\41\40\41\10\10")()
-print(a)
-end)
-
-tab1:CreateButton("Arceus X Aim Bot", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/SPDM-Team/Arceus-X-NEO-public/main/Scripts/ArceusX-Aimbot.lua"))();
-print(a)
-end)
-
-tab1:CreateButton("Fates esp", function()
-loadstring(request({ Url = "https://raw.githubusercontent.com/fatesc/fates-esp/main/main.lua", Method = "GET"}).Body)()
-print(a)
-end)
-
-tab1:CreateButton("Nameless Admin", function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
-print(a)
-end)
-
-tab1:CreateButton("Tiger Admin (Prison Life)", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/dalloc2/Roblox/main/TigerAdmin.lua"))()
-print(a)
-end)
-
-tab1:CreateButton("Total Drama (camp)", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/kureu/Roblox-T.R.D-Camp-Script/main/Roblox%20T.R.D%20Camp%20Script"))();
-print(a)
-end)
-
-tab1:CreateButton("Game Hub V5", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/GamerScripter/Game-Hub/main/loader"))()
-print(a)
-end)
-
-tab1:CreateButton("Haxker666 Script hub", function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/FreeRobloxScripts1/Haxker_6666666-Hub/main/loader'))()
-print(a)
-end)
-
-tab1:CreateButton("Infinite Yield", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))();
-print(a)
-end)
-
-tab1:CreateTextbox("Change Your Speed", function(a)
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = a
-print(a)
-end)
-
-tab1:CreateTextbox("Change Your Jump Power", function(a)
-game.Players.LocalPlayer.Character.Humanoid.JumpPower = a
-print(a)
+tab1:CreateToggle("Toggle", function(state)
+if state then
+  print("Enabled!")
+  toggleAuto = true
+else
+  print("Disabled!")
+  toggleAuto = false
 end)
 
 ---WARNING---
 
 tab1:CreateWarning("Warning")
+
+-- Get the local player
+local localPlayer = game:GetService("Players").LocalPlayer
+
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    --for loop going through all players in server
+    for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+        --If the player is not the local player
+        if v.Name ~= localPlayer.Name then
+            if --if the player has a head, humanoid and health is greater than 0
+                v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 and
+                    v.Character:FindFirstChild("HumanoidRootPart") and
+                    v.Character:FindFirstChild("Head")
+             then --if the player has a forcefield
+                if v.Character:FindFirstChildOfClass("ForceField") then
+                else --else (if the player doesnt have a forcefield)
+                    --Create a ray from the players humanoid to very low center of world
+                    local ray =
+                        Ray.new(v.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(0, -100000, 0))
+                    local Hit = game:GetService("Workspace"):FindPartOnRay(ray, v.Character)
+                    --Set hit to the basepart of the player character on the ray
+                    if Hit then --if hit is not null, and player is on ray
+                        local magnitude =
+                            (v.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).magnitude
+                        --get distance between localplayer and player
+                        --if the distance is less than the shortest distance
+                        if magnitude < shortestDistance then
+                            closestPlayer = v --set closest player to currentPlayer
+                            shortestDistance = magnitude --set shortest distance to new distance
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+local stateType = Enum.HumanoidStateType
+
+local character = game.Players.LocalPlayer.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+humanoid:SetStateEnabled(stateType.FallingDown, false)
+humanoid:SetStateEnabled(stateType.Ragdoll, false)
+
+while true do
+    wait()
+    spawn(
+        function()
+            local test = getClosestPlayer()
+            if --if local player and closestPlayer are not null and toggle is on
+                game:GetService("Players").LocalPlayer.Character.PrimaryPart and getClosestPlayer() ~= nil and
+                    toggleAuto == true
+             then
+                local TargetPart = getClosestPlayer().Character.HumanoidRootPart
+                local Part = game.Players.LocalPlayer.Character.HumanoidRootPart
+                local RotateX, RotateY, RotateZ = 0, 0, 0
+                
+                --CFrame.new(pos: Vector3, lookat: Vector3)
+                --This creates a new CFrame for position at localplayer, and look at target
+                Part.CFrame =
+                    CFrame.new(Part.Position, TargetPart.Position) *
+                    CFrame.Angles(math.rad(0), math.rad(25), math.rad(0))
+                --Multiplies by CFrame.Angles to add sword offset
+
+                game:GetService("Players").LocalPlayer.Character.Humanoid:MoveTo(
+                    getClosestPlayer().Character.HumanoidRootPart.CFrame * Vector3.new(-3, 0, 0)
+                )
+                if getClosestPlayer().Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                end
+            end
+        end
+    )
+end
