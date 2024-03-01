@@ -1,0 +1,8 @@
+local ArceusUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/SPDM-Team/ArceusX-V3-Scripts/main/ArceusUI.lua"))()
+
+ArceusUI:SetTitle("Arceus X <font color='rgb(255, 0, 0)'>|</font> MyScript")
+
+local myToggle = ArceusUI:AddToggle("MyToggle", function(myStatus, ...)
+    local extraValues = {...}
+    print("Toggle status:", myStatus)
+end, myExtraValues)
