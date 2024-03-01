@@ -1,7 +1,7 @@
-range = 10
-toggleAuto = false
-toggleJump = false
-toggleReach = false
+local range = 10
+local toggleAuto = false
+local toggleJump = false
+local toggleReach = false
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
@@ -116,8 +116,8 @@ local stateType = Enum.HumanoidStateType
 local character = game.Players.LocalPlayer.Character
 local humanoid = character:WaitForChild("Humanoid")
 
-humanoid:SetStateEnabled(stateType.FallingDown, false)
-humanoid:SetStateEnabled(stateType.Ragdoll, false)
+--humanoid:SetStateEnabled(stateType.FallingDown, false)
+--humanoid:SetStateEnabled(stateType.Ragdoll, false)
 
 while true do
     wait()
