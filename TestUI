@@ -8,7 +8,7 @@ local window = UILib:Create(
 )
 
 ---Tabs---
-local tab1 = window:CreateTab("Stay Gucci!!!")
+local tab1 = window:CreateTab("G1oober's Sword Script")
 
 ---buttons---
 tab1:CreateTextbox("Change Your Jump Power", function(a)
