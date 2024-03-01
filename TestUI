@@ -22,6 +22,4 @@ end)
 
 tab1:CreateWarning("Warning")
 
--- Get the local player
-local localPlayer = game:GetService("Players").LocalPlayer
 
