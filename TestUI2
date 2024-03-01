@@ -1,23 +1,77 @@
-local PabloLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/BatuKvi123/PabloLibV3/main/PabloLibV3"))()
-local window = PabloLib:Create(
-"G1oober UI",
-"Enabled", -- If you want draggable set here to "Enabled" if you dont want set to "Disabled".
-"p" -- You can put any keybind here to open close.
-)
+range = 10
+toggleAuto = false
+toggleReach = false
 
----Tabs---
-local tab1 = window:CreateTab("G1oober's Sword Script")
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
----buttons---
-tab1:CreateToggle("Toggle", function(state)
-if state then
-  toggleSword = true
-else
- toggleSword = false
+local Window = OrionLib:MakeWindow({Name = "G1oober's UI", HidePremium = true, SaveConfig = false, IntroText = "Welcome!"})
+
+local MainTab = Window:MakeTab({
+	Name = "MainTab",
+	Icon = nil,
+	PremiumOnly = false
+})
+
+local Section = MainTab:AddSection({
+	Name = "Sword Stuff"
+})
+
+MainTab:AddToggle({
+	Name = "AutoBot Sword",
+	Default = false,
+	Callback = function(Value)
+		toggleAuto = (Value)
+	end    
+})
+
+MainTab:AddToggle({
+	Name = "AutoBot Sword",
+	Default = false,
+	Callback = function(Value)
+		toggleReach = (Value)
+	end    
+})
+
+MainTab:AddSlider({
+	Name = "Sword Reach",
+	Min = 0,
+	Max = 30,
+	Default = 10,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Studs",
+	Callback = function(Value)
+		range = (Value)
+	end    
+})
+
+
+
+-----------------------------------------------
+---------        SCRIPT        ----------------
+-----------------------------------------------
+
+--// Variable \--
+local player = game:GetService("Players").LocalPlayer
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    local p = game.Players:GetPlayers()
+    for i = 2, #p do local v = p[i].Character
+        if v and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") and player:DistanceFromCharacter(v.HumanoidRootPart.Position) <= range then
+            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Handle") and toggleReach then
+                tool:Activate()
+                for i,v in next, v:GetChildren() do
+                    if v:IsA("BasePart") then
+                        firetouchinterest(tool.Handle,v,0)
+                        firetouchinterest(tool.Handle,v,1)
+                    end
+                end
+            end
+        end
+    end
 end)
 
----WARNING---
-tab1:CreateWarning("Warning")
 
 -- Get the local player
 local localPlayer = game:GetService("Players").LocalPlayer
@@ -73,7 +127,7 @@ while true do
             local test = getClosestPlayer()
             if --if local player and closestPlayer are not null and toggle is on
                 game:GetService("Players").LocalPlayer.Character.PrimaryPart and getClosestPlayer() ~= nil and
-                    toggleSword == true
+                    toggleAuto == true
              then
                 local TargetPart = getClosestPlayer().Character.HumanoidRootPart
                 local Part = game.Players.LocalPlayer.Character.HumanoidRootPart
@@ -96,3 +150,7 @@ while true do
         end
     )
 end
+
+
+
+OrionLib:Init()
