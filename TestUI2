@@ -111,14 +111,6 @@ local function getClosestPlayer()
     return closestPlayer
 end
 
-local stateType = Enum.HumanoidStateType
-
-local character = game.Players.LocalPlayer.Character
-local humanoid = character:WaitForChild("Humanoid")
-
---humanoid:SetStateEnabled(stateType.FallingDown, false)
---humanoid:SetStateEnabled(stateType.Ragdoll, false)
-
 while true do
     wait()
     spawn(
