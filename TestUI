@@ -14,10 +14,8 @@ local tab1 = window:CreateTab("Sword Bot Script")
 tab1:CreateToggle("Toggle", function(state)
 if state then
   print("Enabled!")
-  toggleAuto = true
 else
   print("Disabled!")
-  toggleAuto = false
 end)
 
 ---WARNING---
