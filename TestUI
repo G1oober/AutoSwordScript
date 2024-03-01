@@ -6,3 +6,5 @@ local myToggle = ArceusUI:AddToggle("MyToggle", function(myStatus, ...)
     local extraValues = {...}
     print("Toggle status:", myStatus)
 end, myExtraValues)
+
+ArceusUI:Start()
