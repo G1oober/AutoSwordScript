@@ -1,0 +1,118 @@
+local toggleAuto = false
+local toggleJump = false
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Window = OrionLib:MakeWindow({Name = "G1oober's UI", HidePremium = true, SaveConfig = false, IntroText = "Welcome!"})
+
+local MainTab = Window:MakeTab({
+	Name = "MainTab",
+	Icon = nil,
+	PremiumOnly = false
+})
+
+local Section = MainTab:AddSection({
+	Name = "Sword Stuff"
+})
+
+MainTab:AddToggle({
+	Name = "Toggle AutoBot",
+	Default = false,
+	Callback = function(Value)
+		toggleAuto = (Value)
+	end    
+})
+
+MainTab:AddToggle({
+	Name = "Toggle AutoJump",
+	Default = false,
+	Callback = function(Value)
+		toggleJump = (Value)
+	end    
+})
+
+MainTab:AddToggle({
+	Name = "Toggle Reach",
+	Default = false,
+	Callback = function(Value)
+		toggleReach = (Value)
+	end    
+})
+
+
+-----------------------------------------------
+---------        SCRIPT        ----------------
+-----------------------------------------------
+
+-- Get the local player
+local localPlayer = game:GetService("Players").LocalPlayer
+
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+        if v.Name ~= localPlayer.Name then
+            if
+                v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 and
+                    v.Character:FindFirstChild("HumanoidRootPart") and
+                    v.Character:FindFirstChild("Head")
+             then
+                if v.Character:FindFirstChildOfClass("ForceField") then
+                else
+                    local ray =
+                        Ray.new(v.Character:FindFirstChild("HumanoidRootPart").Position, Vector3.new(0, -100000, 0))
+                    local Hit = game:GetService("Workspace"):FindPartOnRay(ray, v.Character)
+                    if Hit then
+                        local magnitude =
+                            (v.Character.HumanoidRootPart.Position - localPlayer.Character.HumanoidRootPart.Position).magnitude
+                        if magnitude < shortestDistance then
+                            closestPlayer = v --set closest player to currentPlayer
+                            shortestDistance = magnitude --set shortest distance to new distance
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+local stateType = Enum.HumanoidStateType
+
+local character = game.Players.LocalPlayer.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+--humanoid:SetStateEnabled(stateType.FallingDown, false)
+--humanoid:SetStateEnabled(stateType.Ragdoll, false)
+
+while true do
+    wait()
+    spawn(
+        function()
+            local test = getClosestPlayer()
+            if
+                game:GetService("Players").LocalPlayer.Character.PrimaryPart and getClosestPlayer() ~= nil and
+                    toggleAuto == true
+             then
+                local TargetPart = getClosestPlayer().Character.HumanoidRootPart
+                local Part = game.Players.LocalPlayer.Character.HumanoidRootPart
+                local RotateX, RotateY, RotateZ = 0, 0, 0
+		
+		Part.CFrame =
+                    CFrame.new(Part.Position, Vector3.new(TargetPart.Position.X, Part.Position.Y, TargetPart.Position.Z)) *
+                    CFrame.Angles(math.rad(0), math.rad(25), math.rad(0))
+
+                game:GetService("Players").LocalPlayer.Character.Humanoid:MoveTo(
+                    getClosestPlayer().Character.HumanoidRootPart.CFrame * Vector3.new(-3, 0, 0)
+                )
+                if getClosestPlayer().Character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall and toggleJump then
+                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                end
+            end
+        end
+    )
+end
+
+
+
+OrionLib:Init()
